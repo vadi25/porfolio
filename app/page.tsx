@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { MailOpenIcon } from "lucide-react"
 
-export function Home() {
+function Home() {
   return (
     <div className="bg-background text-foreground">
       <header className="container mx-auto py-8 px-4 md:py-12 md:px-6">
