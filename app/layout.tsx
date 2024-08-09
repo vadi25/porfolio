@@ -14,7 +14,7 @@ const fontBody = Space_Mono({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-body',
-  weight: "400"
+  weight: '400'
 })
 
 export const metadata: Metadata = {
