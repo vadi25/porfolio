@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { MailOpenIcon } from "lucide-react"
+import { ChartArea, MailOpenIcon } from "lucide-react"
 
 
 function Home() {
@@ -38,35 +38,41 @@ function Home() {
             <h2 className="mb-4 text-2xl font-bold">Projects</h2>
             <div className="grid gap-6">
               <div>
-                <img
-                  src="/placeholder.svg"
-                  width="300"
-                  height="200"
-                  alt="Project 1"
-                  className="mb-2 rounded-lg"
-                  style={{ aspectRatio: "300/200", objectFit: "cover" }}
-                />
-                <h3 className="mb-1 text-lg font-semibold">Project 1</h3>
+                <a href="https://unicourse.education" target="_blank" rel="noreferrer">
+                  <img
+                    src="/placeholder.svg"
+                    width="300"
+                    height="200"
+                    alt="Project 1"
+                    className="mb-2 rounded-lg"
+                    style={{ aspectRatio: "300/200", objectFit: "cover" }}
+                  />
+                
+                  <h3 className="mb-1 text-lg font-semibold underline underline-offset-2">Unicourse</h3>
+                </a>
                 <p className="text-muted-foreground">
-                  A responsive web application built with React and Node.js, featuring a modern design and intuitive
-                  user experience.
+                  React, Next JS and Tailwind CSS web based course marketplace, for students to teach other students.
                 </p>
               </div>
               <div>
-                <img
-                  src="/placeholder.svg"
-                  width="300"
-                  height="200"
-                  alt="Project 2"
-                  className="mb-2 rounded-lg"
-                  style={{ aspectRatio: "300/200", objectFit: "cover" }}
-                />
-                <h3 className="mb-1 text-lg font-semibold">Project 2</h3>
+                <a href="https://github.com/vadi25/practica-final-data" target="_blank" rel="noreferrer">
+                  <img
+                    src="/placeholder.svg"
+                    width="300"
+                    height="200"
+                    alt="Project 2"
+                    className="mb-2 rounded-lg"
+                    style={{ aspectRatio: "300/200", objectFit: "cover" }}
+                  />
+                  <h3 className="mb-1 text-lg font-semibold underline underline-offset-2">Dashboard on Data Jobs</h3>
+                </a>
                 <p className="text-muted-foreground">
-                  A data visualization dashboard built with Python and Tableau, providing insights into complex business
-                  data.
+                  A data visualization dashboard built with Pyhton and Streamlit, providing insights into jobs and salaries in the Data industry.
                 </p>
               </div>
+
+              {/*
+              MORE PROJECTS AND SEE MORE OPTION
               <div>
                 <img
                   src="/placeholder.svg"
@@ -84,7 +90,7 @@ function Home() {
               </div>
               <Button variant="outline" className="mx-auto">
                 See more
-              </Button>
+              </Button>**/}
             </div>
           </div>
         </div>
@@ -96,19 +102,16 @@ function Home() {
             <div className="grid gap-6">
               <div>
                 <h3 className="mb-2 text-lg font-semibold">Web Developer</h3>
-                <p className="text-muted-foreground">Acme Inc. | 2018 - Present</p>
+                <p className="text-muted-foreground">Self Employed | 2023 - Present</p>
                 <p className="text-muted-foreground">
-                  Developed and maintained responsive web applications using React, Node.js, and various front-end and
-                  back-end technologies. Collaborated with cross-functional teams to deliver high-quality, user-centric
-                  solutions.
+                  Developed and maintained responsive web applications using React, Next JS and Tailwind CSS. Created internal tools for companies to manage their data and full stack applications.
                 </p>
               </div>
               <div>
-                <h3 className="mb-2 text-lg font-semibold">Data Analyst</h3>
-                <p className="text-muted-foreground">XYZ Corporation | 2015 - 2018</p>
+                <h3 className="mb-2 text-lg font-semibold">Real State Agent</h3>
+                <p className="text-muted-foreground">2021 - Present</p>
                 <p className="text-muted-foreground">
-                  Analyzed complex business data using Python, SQL, and data visualization tools. Provided insights and
-                  recommendations to help drive strategic decision-making.
+                  Sold properties, with a combined value of over €12 million. Improved closing rates by over 100% with non-spanish speaking clients.
                 </p>
               </div>
             </div>
@@ -125,7 +128,7 @@ function Home() {
         </div>
       </section>
       <footer className="bg-muted py-6 text-center text-muted-foreground">
-        <p>&copy; 2024 John Doe. All rights reserved.</p>
+        <p>&copy; 2024 Javier Sanchez Vadillo. All rights reserved.</p>
       </footer>
     </div>
   )
