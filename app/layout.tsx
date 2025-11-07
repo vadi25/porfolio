@@ -3,6 +3,20 @@ import "./globals.css";
 import { cn } from "@/lib/utils"
 import { DM_Sans } from 'next/font/google'
 import { Space_Mono } from 'next/font/google'
+import { IBM_Plex_Sans } from 'next/font/google'
+import { Tenor_Sans } from 'next/font/google'
+
+const ibm_plex_sans = IBM_Plex_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: "400"
+})
+
+const tenor_sans = Tenor_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: "400"
+})
 
 const fontHeading = DM_Sans({
   subsets: ['latin'],
