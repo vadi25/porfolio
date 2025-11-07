@@ -18,8 +18,8 @@ const fontBody = Space_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "JV Porfolio",
-  description: "Personal portfolio of Javier Vadillo",
+  title: "JSV Porfolio",
+  description: "Personal portfolio of Javier Sánchez Vadillo",
 };
 
 export default function RootLayout({
