@@ -89,7 +89,7 @@ const projects: Project[] = [
   },
   {
     name: "DataLighthouse",
-    url: "https://v0-data-lighthouse.vercel.app",
+    url: "https://datalighthouse.dev",
     tagline: "Plug-and-play analytics templates for Next.js teams",
     description:
       "Productised starter with reusable components so builders can ship data storytelling straight inside their apps without reinventing dashboards.",
