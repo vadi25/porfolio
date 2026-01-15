@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowUpRight, Check, Mail, Sparkles } from "lucide-react"
 
-import { Reveal } from "@/components/reveal"
+import { RevealObserver } from "@/components/reveal-observer"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -173,6 +173,7 @@ export default function Home() {
     <div className="relative overflow-hidden bg-background text-foreground">
       <div className="pointer-events-none absolute inset-x-0 top-[-20%] h-[50rem] bg-[radial-gradient(circle_at_top,_rgba(255,195,255,0.35),_transparent_60%)]" />
       <main className="relative flex flex-col">
+        <RevealObserver />
         <header className="flex min-h-screen items-center py-24">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl space-y-10">
@@ -220,7 +221,12 @@ export default function Home() {
             </div>
             <div className="grid gap-8 md:grid-cols-3">
               {focusAreas.map((area, index) => (
-                <Reveal key={area.title} delay={index * 80}>
+                <div
+                  key={area.title}
+                  data-reveal
+                  className="translate-y-10 opacity-0 transition-all duration-700 ease-out will-change-transform data-[revealed=true]:translate-y-0 data-[revealed=true]:opacity-100"
+                  style={{ transitionDelay: `${index * 80}ms` }}
+                >
                   <Card className="border-none bg-[hsl(var(--card))]/80 backdrop-blur-sm">
                     <CardHeader className="space-y-3">
                       <Badge variant="soft" className="w-fit text-xs uppercase tracking-widest">
@@ -241,7 +247,7 @@ export default function Home() {
                       </ul>
                     </CardContent>
                   </Card>
-                </Reveal>
+                </div>
               ))}
             </div>
           </div>
@@ -264,7 +270,12 @@ export default function Home() {
             </div>
             <div className="grid gap-10">
               {projects.map((project, index) => (
-                <Reveal key={project.name} delay={index * 120}>
+                <div
+                  key={project.name}
+                  data-reveal
+                  className="translate-y-10 opacity-0 transition-all duration-700 ease-out will-change-transform data-[revealed=true]:translate-y-0 data-[revealed=true]:opacity-100"
+                  style={{ transitionDelay: `${index * 120}ms` }}
+                >
                   <Card className="group relative overflow-hidden border-none bg-[hsl(var(--card))]/80 shadow-[0_40px_120px_-60px_rgba(0,0,0,0.6)] transition-transform duration-500 hover:-translate-y-2 hover:bg-[hsl(var(--card))]">
                     <div className="pointer-events-none absolute -right-24 top-1/2 h-56 w-56 -translate-y-1/2 rounded-full bg-[hsl(var(--accent))]/25 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
                     <CardHeader className="space-y-3">
@@ -300,7 +311,7 @@ export default function Home() {
                       </div>
                     </CardContent>
                   </Card>
-                </Reveal>
+                </div>
               ))}
             </div>
           </div>
@@ -323,7 +334,12 @@ export default function Home() {
             </div>
             <div className="grid gap-8 md:grid-cols-3">
               {techStack.map((tool, index) => (
-                <Reveal key={tool.name} delay={index * 70}>
+                <div
+                  key={tool.name}
+                  data-reveal
+                  className="translate-y-10 opacity-0 transition-all duration-700 ease-out will-change-transform data-[revealed=true]:translate-y-0 data-[revealed=true]:opacity-100"
+                  style={{ transitionDelay: `${index * 70}ms` }}
+                >
                   <Card className="border-none bg-[hsl(var(--card))]/80">
                     <CardContent className="space-y-6 p-6">
                       <div className="flex items-center gap-4">
@@ -343,7 +359,7 @@ export default function Home() {
                       <p className="text-sm text-foreground/80">{tool.description}</p>
                     </CardContent>
                   </Card>
-                </Reveal>
+                </div>
               ))}
             </div>
           </div>
@@ -351,7 +367,10 @@ export default function Home() {
 
         <section id="contact" className="pb-32 pt-12">
           <div className="container mx-auto px-6">
-            <Reveal>
+            <div
+              data-reveal
+              className="translate-y-10 opacity-0 transition-all duration-700 ease-out will-change-transform data-[revealed=true]:translate-y-0 data-[revealed=true]:opacity-100"
+            >
               <Card className="border-none bg-[hsl(var(--card))]/80">
                 <CardContent className="flex flex-col gap-8 px-6 py-12 text-center sm:px-12">
                   <div className="space-y-3">
@@ -375,7 +394,7 @@ export default function Home() {
                   </div>
                 </CardContent>
               </Card>
-            </Reveal>
+            </div>
           </div>
         </section>
       </main>
