@@ -1,7 +1,8 @@
 import { ArrowUpRight } from "lucide-react"
+import Link from "next/link"
 
-import { projects } from "@/components/portfolio/data"
 import { Reveal } from "@/components/reveal"
+import { projects } from "@/lib/projects"
 
 export function ProjectLedger() {
   return (
@@ -33,16 +34,15 @@ export function ProjectLedger() {
                   </ul>
                 </div>
                 <footer className="project-footer">
-                  {project.featured ? (
-                    <span className="case-study-slot" data-case-study-slot="/work/notcode">
-                      Case Study / Filed Next
-                    </span>
-                  ) : (
-                    <span aria-hidden="true">Field Note / {project.number}</span>
-                  )}
-                  <a href={project.url} target="_blank" rel="noreferrer">
-                    Visit {project.name} <ArrowUpRight aria-hidden="true" />
-                  </a>
+                  <span aria-hidden="true">Field Note / {project.number}</span>
+                  <div className="project-actions">
+                    {project.caseStudyHref ? (
+                      <Link href={project.caseStudyHref}>Read the Case Study</Link>
+                    ) : null}
+                    <a href={project.url} target="_blank" rel="noreferrer">
+                      Visit {project.name} <ArrowUpRight aria-hidden="true" />
+                    </a>
+                  </div>
                 </footer>
               </article>
             </Reveal>

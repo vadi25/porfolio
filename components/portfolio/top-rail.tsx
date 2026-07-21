@@ -4,10 +4,15 @@ const navItems = [
   { index: "03", label: "Contact", href: "#contact" },
 ] as const
 
-export function TopRail() {
+type TopRailProps = {
+  homeHref?: string
+  sectionPrefix?: string
+}
+
+export function TopRail({ homeHref = "#top", sectionPrefix = "" }: TopRailProps) {
   return (
     <header className="top-rail" aria-label="Site header">
-      <a className="identity-mark" href="#top" aria-label="Javier Sánchez Vadillo, home">
+      <a className="identity-mark" href={homeHref} aria-label="Javier Sánchez Vadillo, home">
         <span aria-hidden="true">JSV</span>
         <span className="identity-name">Javier Sánchez Vadillo</span>
       </a>
@@ -15,7 +20,7 @@ export function TopRail() {
         <ol className="rail-index">
           {navItems.map((item) => (
             <li key={item.index}>
-              <a href={item.href}>
+              <a href={`${sectionPrefix}${item.href}`}>
                 <span aria-hidden="true">{item.index}</span> {item.label}
               </a>
             </li>

@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test"
 
 const sectionIds = ["projects", "practice", "stack", "contact"] as const
 const projectUrls = [
+  "/work/notcode",
   "https://notcode.rairai.xyz",
   "https://unicourse.education",
   "https://graphv0.vercel.app",
@@ -68,8 +69,12 @@ test("exposes direct email and safe project actions", async ({ page }) => {
   const emailLinks = page.locator('a[href="mailto:javiersvadillo@gmail.com"]')
   await expect(emailLinks).toHaveCount(2)
 
-  const projectLinks = page.locator("#projects article footer a")
+  const projectLinks = page.locator('#projects article footer a[target="_blank"]')
   await expect(projectLinks).toHaveCount(6)
+  await expect(page.getByRole("link", { name: "Read the Case Study" })).toHaveAttribute(
+    "href",
+    "/work/notcode"
+  )
   await expect(page.locator('#projects a[href="https://notcode.rairai.xyz"]')).toHaveCount(1)
   await expect(page.locator('#projects a[href="https://called-demo.vercel.app"]')).toHaveCount(1)
 
@@ -81,7 +86,7 @@ test("exposes direct email and safe project actions", async ({ page }) => {
   }
 })
 
-test("tabs through ledger links in project order", async ({ page }) => {
+test("tabs through ledger actions in project order", async ({ page }) => {
   await page.goto("/")
 
   const projectLinks = page.locator("#projects article footer a")
