@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowUpRight, Check, Mail, Sparkles } from "lucide-react"
 
+import { Reveal } from "@/components/reveal"
 import { RevealObserver } from "@/components/reveal-observer"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -203,12 +204,12 @@ export default function Home() {
               <div className="flex flex-wrap items-center gap-3 pt-4">
                 <Button asChild size="lg">
                   <Link href="mailto:javiersvadillo@gmail.com">
-                    <Mail className="mr-2 h-4 w-4" /> Start a project
+                    <Mail aria-hidden="true" className="mr-2 h-4 w-4" /> Start a project
                   </Link>
                 </Button>
                 <Button variant="ghost" asChild size="lg" className="text-foreground">
                   <Link href="#projects">
-                    <Sparkles className="mr-2 h-4 w-4" /> See the work
+                    <Sparkles aria-hidden="true" className="mr-2 h-4 w-4" /> See the work
                   </Link>
                 </Button>
               </div>
@@ -233,11 +234,9 @@ export default function Home() {
             </div>
             <div className="grid gap-8 md:grid-cols-3">
               {focusAreas.map((area, index) => (
-                <div
+                <Reveal
                   key={area.title}
-                  data-reveal
-                  className="translate-y-10 opacity-0 transition-all duration-700 ease-out will-change-transform data-[revealed=true]:translate-y-0 data-[revealed=true]:opacity-100"
-                  style={{ transitionDelay: `${index * 80}ms` }}
+                  delay={index * 80}
                 >
                   <Card className="border-none bg-[hsl(var(--card))]/80 backdrop-blur-sm">
                     <CardHeader className="space-y-3">
@@ -252,14 +251,17 @@ export default function Home() {
                       <ul className="space-y-3 text-sm text-foreground/80">
                         {area.points.map((point) => (
                           <li key={point} className="flex gap-3">
-                            <Check className="mt-0.5 h-4 w-4 flex-none text-[hsl(var(--accent-foreground))]" />
+                            <Check
+                              aria-hidden="true"
+                              className="mt-0.5 h-4 w-4 flex-none text-[hsl(var(--accent-foreground))]"
+                            />
                             <span>{point}</span>
                           </li>
                         ))}
                       </ul>
                     </CardContent>
                   </Card>
-                </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -282,13 +284,11 @@ export default function Home() {
             </div>
             <div className="grid gap-10">
               {projects.map((project, index) => (
-                <div
+                <Reveal
                   key={project.name}
-                  data-reveal
-                  className="translate-y-10 opacity-0 transition-all duration-700 ease-out will-change-transform data-[revealed=true]:translate-y-0 data-[revealed=true]:opacity-100"
-                  style={{ transitionDelay: `${index * 120}ms` }}
+                  delay={index * 120}
                 >
-                  <Card className="group relative overflow-hidden border-none bg-[hsl(var(--card))]/80 shadow-[0_40px_120px_-60px_rgba(0,0,0,0.6)] transition-transform duration-500 hover:-translate-y-2 hover:bg-[hsl(var(--card))]">
+                  <Card className="project-card group relative overflow-hidden border-none bg-[hsl(var(--card))]/80 shadow-[0_40px_120px_-60px_rgba(0,0,0,0.6)] transition-transform duration-500 hover:-translate-y-2 hover:bg-[hsl(var(--card))]">
                     <div className="pointer-events-none absolute -right-24 top-1/2 h-56 w-56 -translate-y-1/2 rounded-full bg-[hsl(var(--accent))]/25 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
                     <CardHeader className="space-y-3">
                       <div className="flex flex-wrap items-center gap-3">
@@ -308,7 +308,10 @@ export default function Home() {
                       <ul className="grid gap-4 text-sm text-foreground/80 md:grid-cols-3">
                         {project.highlights.map((highlight) => (
                           <li key={highlight} className="flex items-start gap-3">
-                            <Check className="mt-1 h-4 w-4 flex-none text-[hsl(var(--accent-foreground))]" />
+                            <Check
+                              aria-hidden="true"
+                              className="mt-1 h-4 w-4 flex-none text-[hsl(var(--accent-foreground))]"
+                            />
                             <span>{highlight}</span>
                           </li>
                         ))}
@@ -317,13 +320,16 @@ export default function Home() {
                         <Button variant="ghost" asChild className="group/link gap-2 text-foreground">
                           <Link href={project.url} target="_blank" rel="noreferrer">
                             Visit project
-                            <ArrowUpRight className="h-4 w-4 transition-transform group-hover/link:translate-x-1" />
+                            <ArrowUpRight
+                              aria-hidden="true"
+                              className="h-4 w-4 transition-transform group-hover/link:translate-x-1"
+                            />
                           </Link>
                         </Button>
                       </div>
                     </CardContent>
                   </Card>
-                </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -346,11 +352,9 @@ export default function Home() {
             </div>
             <div className="grid gap-8 md:grid-cols-3">
               {techStack.map((tool, index) => (
-                <div
+                <Reveal
                   key={tool.name}
-                  data-reveal
-                  className="translate-y-10 opacity-0 transition-all duration-700 ease-out will-change-transform data-[revealed=true]:translate-y-0 data-[revealed=true]:opacity-100"
-                  style={{ transitionDelay: `${index * 70}ms` }}
+                  delay={index * 70}
                 >
                   <Card className="border-none bg-[hsl(var(--card))]/80">
                     <CardContent className="space-y-6 p-6">
@@ -371,7 +375,7 @@ export default function Home() {
                       <p className="text-sm text-foreground/80">{tool.description}</p>
                     </CardContent>
                   </Card>
-                </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -379,10 +383,7 @@ export default function Home() {
 
         <section id="contact" className="pb-32 pt-12">
           <div className="container mx-auto px-6">
-            <div
-              data-reveal
-              className="translate-y-10 opacity-0 transition-all duration-700 ease-out will-change-transform data-[revealed=true]:translate-y-0 data-[revealed=true]:opacity-100"
-            >
+            <Reveal>
               <Card className="border-none bg-[hsl(var(--card))]/80">
                 <CardContent className="flex flex-col gap-8 px-6 py-12 text-center sm:px-12">
                   <div className="space-y-3">
@@ -397,7 +398,8 @@ export default function Home() {
                   <div className="flex flex-wrap justify-center gap-4">
                     <Button size="lg" asChild>
                       <Link href="mailto:javiersvadillo@gmail.com">
-                        <Mail className="mr-2 h-4 w-4" /> javiersvadillo@gmail.com
+                        <Mail aria-hidden="true" className="mr-2 h-4 w-4" />
+                        javiersvadillo@gmail.com
                       </Link>
                     </Button>
                     <Button variant="ghost" size="lg" asChild>
@@ -406,7 +408,7 @@ export default function Home() {
                   </div>
                 </CardContent>
               </Card>
-            </div>
+            </Reveal>
           </div>
         </section>
         <RevealObserver />

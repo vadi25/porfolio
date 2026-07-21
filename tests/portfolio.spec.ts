@@ -1,5 +1,46 @@
 import { expect, test } from "@playwright/test"
 
+test("keeps reveal content visible when JavaScript is disabled", async ({ browser }, testInfo) => {
+  const context = await browser.newContext({
+    baseURL: testInfo.project.use.baseURL,
+    javaScriptEnabled: false,
+  })
+  const page = await context.newPage()
+
+  try {
+    await page.goto("/")
+
+    const sections = [
+      { id: "focus", text: /product stack i bring to every venture/i },
+      { id: "projects", text: /ventures and tools shipping today/i },
+      { id: "stack", text: /tools i lean on to ship fast and elegantly/i },
+      { id: "contact", text: /have something ambitious in mind/i },
+    ]
+
+    for (const section of sections) {
+      await expect(page.locator(`#${section.id}`).getByText(section.text)).toBeVisible()
+    }
+
+    const revealWrappers = page.locator("[data-reveal]")
+    await expect
+      .poll(() =>
+        revealWrappers.evaluateAll((elements) =>
+          elements.every((element) => {
+            const styles = getComputedStyle(element)
+            return (
+              styles.display !== "none" &&
+              styles.visibility !== "hidden" &&
+              styles.opacity === "1"
+            )
+          })
+        )
+      )
+      .toBe(true)
+  } finally {
+    await context.close()
+  }
+})
+
 test("renders the portfolio landmarks and sections", async ({ page }) => {
   await page.goto("/")
 
@@ -99,6 +140,59 @@ test("reveals project cards as they enter the viewport", async ({ page }) => {
     await wrapper.scrollIntoViewIfNeeded()
     await expect(wrapper).toHaveAttribute("data-revealed", "true")
   }
+})
+
+test("disables reveal and project hover motion when reduced motion is requested", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  await page.goto("/")
+
+  const revealWrapper = page.locator("#projects [data-reveal]").first()
+  await revealWrapper.scrollIntoViewIfNeeded()
+  await expect(revealWrapper).toHaveAttribute("data-revealed", "true")
+  await expect
+    .poll(() =>
+      revealWrapper.evaluate((element) => {
+        const styles = getComputedStyle(element)
+        return {
+          animationName: styles.animationName,
+          opacity: styles.opacity,
+          transform: styles.transform,
+        }
+      })
+    )
+    .toEqual({ animationName: "none", opacity: "1", transform: "none" })
+
+  const projectCard = revealWrapper.locator(".project-card")
+  await projectCard.hover()
+  await expect.poll(() => projectCard.evaluate((element) => getComputedStyle(element).transform)).toBe(
+    "none"
+  )
+})
+
+test("keeps content visible when IntersectionObserver is unavailable", async ({ page }) => {
+  const browserErrors: Error[] = []
+  page.on("pageerror", (error) => browserErrors.push(error))
+  await page.addInitScript(() => {
+    Reflect.deleteProperty(window, "IntersectionObserver")
+  })
+
+  await page.goto("/")
+  expect(await page.evaluate(() => "IntersectionObserver" in window)).toBe(false)
+
+  const revealWrappers = page.locator("[data-reveal]")
+  await expect
+    .poll(() =>
+      revealWrappers.evaluateAll((elements) =>
+        elements.every((element) => {
+          const styles = getComputedStyle(element)
+          return styles.visibility !== "hidden" && styles.opacity === "1"
+        })
+      )
+    )
+    .toBe(true)
+  expect(browserErrors).toEqual([])
 })
 
 test("emits no uncaught browser errors during load and scroll", async ({ page }) => {

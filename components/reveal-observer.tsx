@@ -7,6 +7,7 @@ const REVEAL_SELECTOR = "[data-reveal]"
 export function RevealObserver() {
   useEffect(() => {
     if (typeof window === "undefined") return
+    if (!("IntersectionObserver" in window)) return
 
     const observedElements = new Set<HTMLElement>()
 
