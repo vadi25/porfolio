@@ -3,6 +3,7 @@ import { expect, test } from "@playwright/test"
 test("renders the portfolio landmarks and sections", async ({ page }) => {
   await page.goto("/")
 
+  await expect(page).toHaveTitle(/Javier Sánchez Vadillo/)
   await expect(page.locator("main")).toHaveCount(1)
   await expect(
     page.getByRole("heading", {
@@ -39,8 +40,17 @@ test("keeps project links external and safe", async ({ page }) => {
   await page.goto("/")
 
   const projectLinks = page.getByRole("link", { name: /visit project/i })
+  const projectEntries = page.locator("#projects [data-reveal]")
+  await expect(projectLinks).toHaveCount(6)
+  await expect(projectEntries).toHaveCount(6)
+  await expect(
+    page.locator('#projects a[href="https://notcode.rairai.xyz"]')
+  ).toHaveCount(1)
+  await expect(
+    page.locator('#projects a[href="https://called-demo.vercel.app"]')
+  ).toHaveCount(1)
+
   const linkCount = await projectLinks.count()
-  expect(linkCount).toBeGreaterThan(0)
 
   for (let index = 0; index < linkCount; index += 1) {
     const link = projectLinks.nth(index)
@@ -51,6 +61,9 @@ test("keeps project links external and safe", async ({ page }) => {
     await expect(link).toHaveAttribute("target", "_blank")
     expect(rel?.split(/\s+/)).toContain("noreferrer")
   }
+
+  const misspelledHost = ["verf", "cel"].join("")
+  await expect(page.locator(`#projects a[href*="${misspelledHost}"]`)).toHaveCount(0)
 })
 
 test("loads every technology logo", async ({ page }) => {

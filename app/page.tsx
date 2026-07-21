@@ -36,6 +36,19 @@ type TechStackItem = {
 
 const projects: Project[] = [
   {
+    name: "NotCode",
+    url: "https://notcode.rairai.xyz",
+    tagline: "Walk away from coding agents without missing the moment they need you",
+    description:
+      "A native macOS menu-bar app that plays local alerts and, when you are away, sends privacy-minimized WhatsApp status for Claude Code, Codex CLI, and Cursor.",
+    highlights: [
+      "Native Swift menu-bar app with standalone hooks for three coding agents",
+      "Presence-aware sound and optional WhatsApp alerts without sending code",
+      "Free, MIT-licensed, and able to chain with existing agent configuration",
+    ],
+    role: "Creator · product · native macOS",
+  },
+  {
     name: "Unicourse",
     url: "https://unicourse.education",
     tagline: "Peer-to-peer learning marketplace for top students",
@@ -63,7 +76,7 @@ const projects: Project[] = [
   },
   {
     name: "Called",
-    url: "https://called-demo.verfcel.app",
+    url: "https://called-demo.vercel.app",
     tagline: "Calendar-native AI assistant for founders and operators",
     description:
       "Conversational agent that understands your schedule, books meetings, and writes follow-ups using Clerk auth with Google Calendar sync.",
