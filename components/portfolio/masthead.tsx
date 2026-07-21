@@ -23,7 +23,7 @@ export function Masthead() {
     <section className="masthead shell" id="top" aria-labelledby="masthead-title">
       <div className="masthead-kicker editorial-label">
         <span>Independent Product Practice</span>
-        <span>Selected Work · 2024—26</span>
+        <span>Selected Work · Current File</span>
       </div>
       <Reveal className="masthead-statement">
         <h1 id="masthead-title">

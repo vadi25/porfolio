@@ -180,6 +180,9 @@ svg {
 .rail-index a,
 .rail-email {
   position: relative;
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
 }
 
 .rail-index a::after,
@@ -727,6 +730,10 @@ svg {
   text-decoration: none;
 }
 
+.contact a:focus-visible {
+  outline-color: #ff8f77;
+}
+
 .contact-note {
   grid-column: 10 / -1;
   display: flex;
@@ -825,7 +832,7 @@ svg {
 
   .rail-index {
     gap: 0.85rem;
-    font-size: 0.59rem;
+    font-size: 0.68rem;
   }
 
   .masthead {

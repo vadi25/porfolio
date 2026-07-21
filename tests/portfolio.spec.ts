@@ -1,6 +1,14 @@
 import { expect, test } from "@playwright/test"
 
 const sectionIds = ["projects", "practice", "stack", "contact"] as const
+const projectUrls = [
+  "https://notcode.rairai.xyz",
+  "https://unicourse.education",
+  "https://graphv0.vercel.app",
+  "https://called-demo.vercel.app",
+  "https://opencut.app",
+  "https://datalighthouse.dev",
+] as const
 
 test("keeps the complete portfolio visible when JavaScript is disabled", async ({ browser }, testInfo) => {
   const context = await browser.newContext({
@@ -70,6 +78,20 @@ test("exposes direct email and safe project actions", async ({ page }) => {
     expect(await link.getAttribute("href")).toMatch(/^https:\/\//)
     await expect(link).toHaveAttribute("target", "_blank")
     expect((await link.getAttribute("rel"))?.split(/\s+/)).toContain("noreferrer")
+  }
+})
+
+test("tabs through ledger links in project order", async ({ page }) => {
+  await page.goto("/")
+
+  const projectLinks = page.locator("#projects article footer a")
+  await projectLinks.first().focus()
+
+  for (let index = 0; index < projectUrls.length; index += 1) {
+    const link = projectLinks.nth(index)
+    await expect(link).toBeFocused()
+    await expect(link).toHaveAttribute("href", projectUrls[index])
+    if (index < projectUrls.length - 1) await page.keyboard.press("Tab")
   }
 })
 
