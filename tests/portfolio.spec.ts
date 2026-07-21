@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test"
 
-test("keeps reveal content visible when JavaScript is disabled", async ({ browser }, testInfo) => {
+const sectionIds = ["projects", "practice", "stack", "contact"] as const
+
+test("keeps the complete portfolio visible when JavaScript is disabled", async ({ browser }, testInfo) => {
   const context = await browser.newContext({
     baseURL: testInfo.project.use.baseURL,
     javaScriptEnabled: false,
@@ -9,17 +11,10 @@ test("keeps reveal content visible when JavaScript is disabled", async ({ browse
 
   try {
     await page.goto("/")
-
-    const sections = [
-      { id: "focus", text: /product stack i bring to every venture/i },
-      { id: "projects", text: /ventures and tools shipping today/i },
-      { id: "stack", text: /tools i lean on to ship fast and elegantly/i },
-      { id: "contact", text: /have something ambitious in mind/i },
-    ]
-
-    for (const section of sections) {
-      await expect(page.locator(`#${section.id}`).getByText(section.text)).toBeVisible()
-    }
+    for (const id of sectionIds) await expect(page.locator(`#${id}`)).toBeVisible()
+    await expect(page.locator(".project-entry")).toHaveCount(6)
+    await expect(page.locator(".practice-row")).toHaveCount(3)
+    await expect(page.locator("#stack img")).toHaveCount(6)
 
     const revealWrappers = page.locator("[data-reveal]")
     await expect
@@ -27,11 +22,7 @@ test("keeps reveal content visible when JavaScript is disabled", async ({ browse
         revealWrappers.evaluateAll((elements) =>
           elements.every((element) => {
             const styles = getComputedStyle(element)
-            return (
-              styles.display !== "none" &&
-              styles.visibility !== "hidden" &&
-              styles.opacity === "1"
-            )
+            return styles.display !== "none" && styles.visibility !== "hidden" && styles.opacity === "1"
           })
         )
       )
@@ -41,146 +32,99 @@ test("keeps reveal content visible when JavaScript is disabled", async ({ browse
   }
 })
 
-test("renders the portfolio landmarks and sections", async ({ page }) => {
+test("renders a semantic field dossier with a usable jump index", async ({ page }) => {
   await page.goto("/")
 
   await expect(page).toHaveTitle(/Javier Sánchez Vadillo/)
   await expect(page.locator("main")).toHaveCount(1)
-  await expect(
-    page.getByRole("heading", {
-      level: 1,
-      name: /founder-builder crafting data-rich products/i,
-    })
-  ).toBeVisible()
+  await expect(page.locator("footer.site-footer")).toHaveCount(1)
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    /I turn stubborn ideas into shipped products/i
+  )
+  await expect(page.getByRole("heading", { level: 2, name: /Six Products/i })).toBeVisible()
 
-  const sections = [
-    { id: "projects", heading: /ventures and tools shipping today/i },
-    { id: "stack", heading: /tools i lean on to ship fast and elegantly/i },
-    { id: "contact", heading: /have something ambitious in mind/i },
-  ]
+  const nav = page.getByRole("navigation", { name: "Portfolio index" })
+  await expect(nav.getByRole("link", { name: "Work" })).toHaveAttribute("href", "#projects")
+  await expect(nav.getByRole("link", { name: "Practice" })).toHaveAttribute("href", "#practice")
+  await expect(nav.getByRole("link", { name: "Contact" })).toHaveAttribute("href", "#contact")
 
-  for (const section of sections) {
-    await expect(page.locator(`#${section.id}`)).toContainText(section.heading)
-  }
+  const skip = page.getByRole("link", { name: "Skip to Main Content" })
+  await skip.focus()
+  await expect(skip).toBeInViewport()
+  await expect(skip).toHaveAttribute("href", "#main-content")
 })
 
-test("exposes the primary email and projects actions", async ({ page }) => {
+test("exposes direct email and safe project actions", async ({ page }) => {
   await page.goto("/")
 
-  await expect(page.getByRole("link", { name: /start a project/i })).toHaveAttribute(
-    "href",
-    "mailto:javiersvadillo@gmail.com"
-  )
-  await expect(page.getByRole("link", { name: /see the work/i })).toHaveAttribute(
-    "href",
-    "#projects"
-  )
-})
+  const emailLinks = page.locator('a[href="mailto:javiersvadillo@gmail.com"]')
+  await expect(emailLinks).toHaveCount(2)
 
-test("keeps project links external and safe", async ({ page }) => {
-  await page.goto("/")
-
-  const projectLinks = page.getByRole("link", { name: /visit project/i })
-  const projectEntries = page.locator("#projects [data-reveal]")
+  const projectLinks = page.locator("#projects article footer a")
   await expect(projectLinks).toHaveCount(6)
-  await expect(projectEntries).toHaveCount(6)
-  await expect(
-    page.locator('#projects a[href="https://notcode.rairai.xyz"]')
-  ).toHaveCount(1)
-  await expect(
-    page.locator('#projects a[href="https://called-demo.vercel.app"]')
-  ).toHaveCount(1)
+  await expect(page.locator('#projects a[href="https://notcode.rairai.xyz"]')).toHaveCount(1)
+  await expect(page.locator('#projects a[href="https://called-demo.vercel.app"]')).toHaveCount(1)
 
-  const linkCount = await projectLinks.count()
-
-  for (let index = 0; index < linkCount; index += 1) {
+  for (let index = 0; index < 6; index += 1) {
     const link = projectLinks.nth(index)
-    const href = await link.getAttribute("href")
-    const rel = await link.getAttribute("rel")
-
-    expect(href).toMatch(/^https:\/\//)
+    expect(await link.getAttribute("href")).toMatch(/^https:\/\//)
     await expect(link).toHaveAttribute("target", "_blank")
-    expect(rel?.split(/\s+/)).toContain("noreferrer")
+    expect((await link.getAttribute("rel"))?.split(/\s+/)).toContain("noreferrer")
   }
-
-  const misspelledHost = ["verf", "cel"].join("")
-  await expect(page.locator(`#projects a[href*="${misspelledHost}"]`)).toHaveCount(0)
 })
 
-test("loads every technology logo", async ({ page }) => {
+test("loads every technology logo with stable dimensions", async ({ page }) => {
   await page.goto("/")
 
   const logos = page.locator("#stack img")
-  const logoCount = await logos.count()
-  expect(logoCount).toBeGreaterThan(0)
-
-  for (let index = 0; index < logoCount; index += 1) {
+  await expect(logos).toHaveCount(6)
+  for (let index = 0; index < 6; index += 1) {
     const logo = logos.nth(index)
     await logo.scrollIntoViewIfNeeded()
+    await expect(logo).toHaveAttribute("width", "28")
+    await expect(logo).toHaveAttribute("height", "28")
     await expect
-      .poll(() =>
-        logo.evaluate(
-          (image) =>
-            image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0
-        )
-      )
+      .poll(() => logo.evaluate((image) => image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0))
       .toBe(true)
   }
 })
 
-test("reveals project cards as they enter the viewport", async ({ page }) => {
+test("reveals project entries as they enter the viewport", async ({ page }) => {
   await page.goto("/")
 
-  const revealWrappers = page.locator("#projects [data-reveal]")
-  const wrapperCount = await revealWrappers.count()
-  expect(wrapperCount).toBeGreaterThan(0)
-
-  for (let index = 0; index < wrapperCount; index += 1) {
-    const wrapper = revealWrappers.nth(index)
+  const wrappers = page.locator("#projects [data-reveal]")
+  await expect(wrappers).toHaveCount(6)
+  for (let index = 0; index < 6; index += 1) {
+    const wrapper = wrappers.nth(index)
     await wrapper.scrollIntoViewIfNeeded()
     await expect(wrapper).toHaveAttribute("data-revealed", "true")
   }
 })
 
-test("disables reveal and project hover motion when reduced motion is requested", async ({
-  page,
-}) => {
+test("removes reveal motion when reduced motion is requested", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" })
   await page.goto("/")
 
-  const revealWrapper = page.locator("#projects [data-reveal]").first()
-  await revealWrapper.scrollIntoViewIfNeeded()
-  await expect(revealWrapper).toHaveAttribute("data-revealed", "true")
+  const wrapper = page.locator("#projects [data-reveal]").first()
+  await wrapper.scrollIntoViewIfNeeded()
+  await expect(wrapper).toHaveAttribute("data-revealed", "true")
   await expect
     .poll(() =>
-      revealWrapper.evaluate((element) => {
+      wrapper.evaluate((element) => {
         const styles = getComputedStyle(element)
-        return {
-          animationName: styles.animationName,
-          opacity: styles.opacity,
-          transform: styles.transform,
-        }
+        return { animationName: styles.animationName, opacity: styles.opacity, transform: styles.transform }
       })
     )
     .toEqual({ animationName: "none", opacity: "1", transform: "none" })
-
-  const projectCard = revealWrapper.locator(".project-card")
-  await projectCard.hover()
-  await expect.poll(() => projectCard.evaluate((element) => getComputedStyle(element).transform)).toBe(
-    "none"
-  )
 })
 
 test("keeps content visible when IntersectionObserver is unavailable", async ({ page }) => {
   const browserErrors: Error[] = []
   page.on("pageerror", (error) => browserErrors.push(error))
-  await page.addInitScript(() => {
-    Reflect.deleteProperty(window, "IntersectionObserver")
-  })
-
+  await page.addInitScript(() => Reflect.deleteProperty(window, "IntersectionObserver"))
   await page.goto("/")
-  expect(await page.evaluate(() => "IntersectionObserver" in window)).toBe(false)
 
+  expect(await page.evaluate(() => "IntersectionObserver" in window)).toBe(false)
   const revealWrappers = page.locator("[data-reveal]")
   await expect
     .poll(() =>
@@ -195,14 +139,27 @@ test("keeps content visible when IntersectionObserver is unavailable", async ({ 
   expect(browserErrors).toEqual([])
 })
 
+test("has no horizontal overflow from 320 through 1440 pixels", async ({ browser }, testInfo) => {
+  for (const width of [320, 375, 768, 1024, 1440]) {
+    const context = await browser.newContext({
+      baseURL: testInfo.project.use.baseURL,
+      viewport: { width, height: 900 },
+    })
+    const page = await context.newPage()
+    await page.goto("/")
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth),
+      `overflow at ${width}px`
+    ).toBe(true)
+    await context.close()
+  }
+})
+
 test("emits no uncaught browser errors during load and scroll", async ({ page }) => {
   const browserErrors: Error[] = []
   page.on("pageerror", (error) => browserErrors.push(error))
 
   await page.goto("/")
-  for (const sectionId of ["focus", "projects", "stack", "contact"]) {
-    await page.locator(`#${sectionId}`).scrollIntoViewIfNeeded()
-  }
-
+  for (const id of sectionIds) await page.locator(`#${id}`).scrollIntoViewIfNeeded()
   expect(browserErrors).toEqual([])
 })

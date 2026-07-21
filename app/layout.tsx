@@ -1,54 +1,34 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { cn } from "@/lib/utils"
-import { DM_Sans } from 'next/font/google'
-import { Space_Mono } from 'next/font/google'
-import { IBM_Plex_Sans } from 'next/font/google'
-import { Tenor_Sans } from 'next/font/google'
+import type { Metadata, Viewport } from "next"
+import { Cormorant_Garamond, Manrope } from "next/font/google"
 
-const ibm_plex_sans = IBM_Plex_Sans({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: "400"
+import "./globals.css"
+
+const display = Cormorant_Garamond({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+  weight: ["500", "600", "700"],
 })
 
-const tenor_sans = Tenor_Sans({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: "400"
-})
-
-const fontHeading = DM_Sans({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-heading',
-})
-
-const fontBody = Space_Mono({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-body',
-  weight: '400'
+const body = Manrope({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-body",
+  weight: ["400", "500", "600", "700"],
 })
 
 export const metadata: Metadata = {
-  title: "Javier Sánchez Vadillo — Founder-Builder",
+  title: "Javier Sánchez Vadillo — Founder & Product Engineer",
   description:
-    "Founder and product engineer building data-rich software, AI-native tools, and polished digital ventures.",
-};
+    "Selected ventures, product systems, and engineering work by founder-builder Javier Sánchez Vadillo.",
+}
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const viewport: Viewport = { themeColor: "#f2ecdf" }
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={cn(
-          'antialiased',
-          fontHeading.variable,
-          fontBody.variable
-        )}>{children}</body>
+      <body className={`${display.variable} ${body.variable}`}>{children}</body>
     </html>
-  );
+  )
 }

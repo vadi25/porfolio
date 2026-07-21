@@ -1,7 +1,7 @@
 import { fontFamily } from "tailwindcss/defaultTheme";
 
 /** @type {import('tailwindcss').Config} */
-export default {
+const config = {
   content: [
     "./components/**/*.{js,ts,jsx,tsx}",
     "./app/**/*.{js,ts,jsx,tsx}",
@@ -9,8 +9,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['var(--font-heading)', ...fontFamily.sans],
-        body: ['var(--font-body)', ...fontFamily.mono]
+        display: ['var(--font-display)', ...fontFamily.serif],
+        body: ['var(--font-body)', ...fontFamily.sans],
+        mono: [...fontFamily.mono]
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -57,3 +58,5 @@ export default {
   },
   plugins: [],
 };
+
+export default config;
