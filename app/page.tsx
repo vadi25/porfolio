@@ -173,7 +173,6 @@ export default function Home() {
     <div className="relative overflow-hidden bg-background text-foreground">
       <div className="pointer-events-none absolute inset-x-0 top-[-20%] h-[50rem] bg-[radial-gradient(circle_at_top,_rgba(255,195,255,0.35),_transparent_60%)]" />
       <main className="relative flex flex-col">
-        <RevealObserver />
         <header className="flex min-h-screen items-center py-24">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl space-y-10">
@@ -397,6 +396,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+        <RevealObserver />
       </main>
     </div>
   )

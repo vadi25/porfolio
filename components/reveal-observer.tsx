@@ -8,11 +8,7 @@ export function RevealObserver() {
   useEffect(() => {
     if (typeof window === "undefined") return
 
-    const elements = Array.from(
-      document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR)
-    )
-
-    if (!elements.length) return
+    const observedElements = new Set<HTMLElement>()
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -21,6 +17,7 @@ export function RevealObserver() {
           const target = entry.target as HTMLElement
           target.dataset.revealed = "true"
           observer.unobserve(target)
+          observedElements.delete(target)
         })
       },
       {
@@ -29,9 +26,26 @@ export function RevealObserver() {
       }
     )
 
-    elements.forEach((element) => observer.observe(element))
+    const observeRevealElements = () => {
+      document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR).forEach((element) => {
+        if (observedElements.has(element) || element.dataset.revealed === "true") {
+          return
+        }
 
-    return () => observer.disconnect()
+        observedElements.add(element)
+        observer.observe(element)
+      })
+    }
+
+    const mutationObserver = new MutationObserver(observeRevealElements)
+
+    observeRevealElements()
+    mutationObserver.observe(document.body, { childList: true, subtree: true })
+
+    return () => {
+      mutationObserver.disconnect()
+      observer.disconnect()
+    }
   }, [])
 
   return null
