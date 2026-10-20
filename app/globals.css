@@ -795,7 +795,11 @@ svg {
 #projects,
 #practice,
 #stack,
-#contact {
+#contact,
+#crazy,
+#crazy-exhibits,
+#crazy-reviews,
+#crazy-guestbook {
   scroll-margin-top: 1.5rem;
 }
 
@@ -1045,5 +1049,29 @@ svg {
     animation: none;
     opacity: 1;
     transform: none;
+  }
+
+  [data-crazy-motion] {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  [data-crazy-shutter] {
+    animation: none !important;
+    transform: none !important;
+    clip-path: inset(0 0 100% 0) !important;
+  }
+
+  [data-crazy-marquee] [data-crazy-motion] {
+    display: block;
+    width: auto !important;
+  }
+
+  [data-crazy-marquee] [data-crazy-motion] p {
+    white-space: normal;
+  }
+
+  [data-crazy-marquee] [data-crazy-motion] p + p {
+    display: none;
   }
 }

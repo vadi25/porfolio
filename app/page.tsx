@@ -1,4 +1,5 @@
 import { ContactEndplate } from "@/components/portfolio/contact-endplate"
+import { CrazyFile } from "@/components/portfolio/crazy-file"
 import { Masthead } from "@/components/portfolio/masthead"
 import { PracticeMatrix } from "@/components/portfolio/practice-matrix"
 import { ProjectLedger } from "@/components/portfolio/project-ledger"
@@ -19,6 +20,7 @@ export default function Home() {
         <ProjectLedger />
         <PracticeMatrix />
         <ToolStrip />
+        <CrazyFile />
         <ContactEndplate />
       </main>
       <SiteFooter />
