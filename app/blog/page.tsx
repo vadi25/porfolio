@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 
-import { Snow } from "@/components/ice/snow"
+import { Polar } from "@/components/ice/polar"
 import { formatPostDate, getPosts } from "@/lib/posts"
 import { person } from "@/lib/site"
 
@@ -18,7 +18,7 @@ export default function BlogIndexPage() {
       <a className="skip-link" href="#main-content">
         Skip to Main Content
       </a>
-      <Snow />
+      <Polar />
       <main id="main-content" className="reading">
         <p className="back-link">
           <Link href="/">Home</Link>

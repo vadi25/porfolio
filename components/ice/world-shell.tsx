@@ -3,38 +3,20 @@
 import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useRef } from "react"
 
+import { EASE_IN_OUT, EASE_OUT } from "@/components/ice/easing"
+import { registerPortal } from "@/components/ice/portal"
+
 const OUT_MS = 680
-const IN_MS = 760
+const IN_MS = 560
 const FADE_MS = 180
 
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches
 }
 
-function easeInCubic(value: number) {
-  return value * value * value
-}
-
-function easeOutCubic(value: number) {
-  return 1 - (1 - value) ** 3
-}
-
 function wait(ms: number) {
   return new Promise<void>((resolve) => {
     window.setTimeout(resolve, ms)
-  })
-}
-
-function animate(duration: number, ease: (value: number) => number, onFrame: (value: number) => void) {
-  return new Promise<void>((resolve) => {
-    const started = performance.now()
-    const frame = (now: number) => {
-      const t = Math.min(1, (now - started) / duration)
-      onFrame(ease(t))
-      if (t < 1) requestAnimationFrame(frame)
-      else resolve()
-    }
-    requestAnimationFrame(frame)
   })
 }
 
@@ -57,6 +39,8 @@ export function WorldShell({ children }: { children: React.ReactNode }) {
   }, [pathname])
 
   useEffect(() => {
+    const running: Animation[] = []
+
     function waitForPath(expected: string) {
       if (pathRef.current === expected) return Promise.resolve()
       return new Promise<void>((resolve) => {
@@ -110,14 +94,6 @@ export function WorldShell({ children }: { children: React.ReactNode }) {
       world.style.transformOrigin = `${x - rect.left}px ${y - rect.top}px`
     }
 
-    function setStretch(amount: number) {
-      const world = worldRef.current
-      if (!world) return
-      const sx = 1 + amount * 0.46
-      const sy = 1 + amount * 0.72
-      world.style.transform = `scale(${sx.toFixed(4)}, ${sy.toFixed(4)})`
-    }
-
     function showCover(color: string) {
       const cover = coverRef.current
       const fill = fillRef.current
@@ -128,9 +104,15 @@ export function WorldShell({ children }: { children: React.ReactNode }) {
       cover.dataset.active = "true"
     }
 
+    function stopMotion() {
+      for (const animation of running) animation.cancel()
+      running.length = 0
+    }
+
     function hideCover() {
       const cover = coverRef.current
       const world = worldRef.current
+      stopMotion()
       if (cover) {
         cover.dataset.active = "false"
         cover.style.opacity = "0"
@@ -140,6 +122,12 @@ export function WorldShell({ children }: { children: React.ReactNode }) {
         world.style.transformOrigin = ""
         delete world.dataset.warping
       }
+    }
+
+    function play(element: Element, keyframes: Keyframe[], duration: number, easing: string) {
+      const animation = element.animate(keyframes, { duration, easing, fill: "forwards" })
+      running.push(animation)
+      return animation.finished.catch(() => undefined)
     }
 
     async function travel(anchor: HTMLAnchorElement) {
@@ -152,49 +140,56 @@ export function WorldShell({ children }: { children: React.ReactNode }) {
       const rect = anchor.getBoundingClientRect()
       const x = rect.left + rect.width / 2
       const y = rect.top + rect.height / 2
-      const color = url.pathname === "/y2k" ? "#9dc6f6" : "#e7f3f8"
+      const color = url.pathname === "/y2k" ? "#8ebcf2" : "#16344e"
       const world = worldRef.current
       const cover = coverRef.current
+      const hole = holeRef.current
       busyRef.current = true
       const previousOverflow = document.documentElement.style.overflow
       document.documentElement.style.overflow = "hidden"
 
       try {
-        if (reduced) {
+        if (reduced || !world || !cover || !hole) {
           showCover(color)
           setHole(x, y, 0)
           if (cover) cover.style.opacity = "0"
-          await animate(FADE_MS, easeInCubic, (value) => {
-            if (cover) cover.style.opacity = String(value)
-          })
+          if (cover) {
+            await play(cover, [{ opacity: 0 }, { opacity: 1 }], FADE_MS, EASE_OUT)
+          }
           router.push(href)
           await waitForPath(url.pathname)
           await wait(20)
-          await animate(FADE_MS + 40, easeOutCubic, (value) => {
-            if (cover) cover.style.opacity = String(1 - value)
-          })
+          if (cover) {
+            await play(cover, [{ opacity: 1 }, { opacity: 0 }], FADE_MS, EASE_OUT)
+          }
           return
         }
 
-        if (world) world.dataset.warping = "out"
+        world.dataset.warping = "out"
         lockOrigin(x, y)
         showCover(color)
         setHole(x, y, maxRadius())
-        await animate(OUT_MS, easeInCubic, (value) => {
-          setHole(x, y, maxRadius() * (1 - value))
-          setStretch(value)
-        })
+        await Promise.all([
+          play(hole, [{ r: maxRadius() }, { r: 0 }], OUT_MS, EASE_IN_OUT),
+          play(world, [{ transform: "scale(1, 1)" }, { transform: "scale(1.46, 1.72)" }], OUT_MS, EASE_IN_OUT),
+        ])
+        stopMotion()
+        world.style.transform = "scale(1.46, 1.72)"
+        setHole(x, y, 0)
         router.push(href)
         await waitForPath(url.pathname)
         await wait(32)
-        if (world) world.dataset.warping = "in"
+        world.dataset.warping = "in"
         lockOrigin(x, y)
-        setStretch(1)
-        setHole(x, y, 0)
-        await animate(IN_MS, easeOutCubic, (value) => {
-          setHole(x, y, maxRadius() * value)
-          setStretch(1 - value)
-        })
+        await Promise.all([
+          play(hole, [{ r: 0 }, { r: maxRadius() }], IN_MS, EASE_OUT),
+          play(
+            world,
+            [{ transform: "scale(1.46, 1.72)" }, { transform: "scale(1, 1)" }],
+            IN_MS,
+            EASE_OUT,
+          ),
+        ])
       } finally {
         document.documentElement.style.overflow = previousOverflow
         hideCover()
@@ -202,19 +197,7 @@ export function WorldShell({ children }: { children: React.ReactNode }) {
       }
     }
 
-    function onClick(event: MouseEvent) {
-      if (event.defaultPrevented || event.button !== 0) return
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
-      const target = event.target
-      if (!(target instanceof Element)) return
-      const anchor = target.closest("a[data-portal]")
-      if (!(anchor instanceof HTMLAnchorElement)) return
-      event.preventDefault()
-      void travel(anchor)
-    }
-
-    document.addEventListener("click", onClick)
-    return () => document.removeEventListener("click", onClick)
+    return registerPortal(travel)
   }, [router])
 
   return (
@@ -229,7 +212,7 @@ export function WorldShell({ children }: { children: React.ReactNode }) {
             <circle ref={holeRef} cx="0" cy="0" r="0" fill="black" />
           </mask>
         </defs>
-        <rect ref={fillRef} x="0" y="0" width="1" height="1" fill="#e7f3f8" mask="url(#portal-mask)" />
+        <rect ref={fillRef} x="0" y="0" width="1" height="1" fill="#16344e" mask="url(#portal-mask)" />
       </svg>
     </>
   )

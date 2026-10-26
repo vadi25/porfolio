@@ -1,6 +1,6 @@
 import { Identity } from "@/components/ice/identity"
 import { Penguin } from "@/components/ice/penguin"
-import { Snow } from "@/components/ice/snow"
+import { Polar } from "@/components/ice/polar"
 import { Snowballs } from "@/components/ice/snowballs"
 
 export default function HomePage() {
@@ -9,7 +9,7 @@ export default function HomePage() {
       <a className="skip-link" href="#main-content">
         Skip to Main Content
       </a>
-      <Snow />
+      <Polar />
       <main id="main-content">
         <Identity />
       </main>

@@ -70,15 +70,51 @@ test("hides falling snow when reduced motion is requested", async ({ page }) => 
 
 test("throws a snowball that leaves a mark", async ({ page }) => {
   await page.goto("/")
-  await page.mouse.click(48, 520)
+  await page.locator(".snowball-layer[data-ready]").waitFor()
+  await page.mouse.click(48, 200)
   await expect(page.locator(".snowball, .snow-splat")).toHaveCount(1)
 })
 
-test("does not throw a snowball from the penguin", async ({ page }) => {
+test("a plain link click waits until the snowball lands", async ({ page }) => {
+  await page.goto("/")
+  await page.locator(".snowball-layer[data-ready]").waitFor()
+  await page.locator('a[href="/blog"]').click({ noWaitAfter: true })
+  await expect(page.locator(".snowball, .snow-splat")).toHaveCount(1)
+  await page.waitForTimeout(400)
+  await expect(page).toHaveURL("/")
+  await expect(page.locator(".snow-splat")).toHaveCount(1)
+  await expect(page).toHaveURL("/blog")
+})
+
+test("modified clicks are not held for the snowball", async ({ page }) => {
+  await page.goto("/")
+  await page.locator(".snowball-layer[data-ready]").waitFor()
+  const link = page.locator('a[href="/blog"]')
+  await link.evaluate((element) => {
+    element.addEventListener("click", (event: Event) => {
+      const click = event as MouseEvent
+      ;(window as Window & { __activation?: { prevented: boolean; ctrl: boolean } }).__activation = {
+        prevented: click.defaultPrevented,
+        ctrl: click.ctrlKey,
+      }
+    })
+  })
+  await link.click({ modifiers: ["Control"], noWaitAfter: true })
+  await expect
+    .poll(() => page.evaluate(() => (window as Window & { __activation?: { prevented: boolean; ctrl: boolean } }).__activation))
+    .toEqual({ prevented: false, ctrl: true })
+  await page.waitForTimeout(250)
+  await expect(page.locator(".snowball, .snow-splat")).toHaveCount(0)
+})
+
+test("reduced motion skips the flight and navigates quickly", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" })
   await page.goto("/")
-  await page.locator(".corner-trigger").click({ noWaitAfter: true })
-  await expect(page.locator(".snowball, .snow-splat")).toHaveCount(0)
+  await page.locator(".snowball-layer[data-ready]").waitFor()
+  const started = Date.now()
+  await page.locator('a[href="/blog"]').click()
+  await expect(page).toHaveURL("/blog")
+  expect(Date.now() - started).toBeLessThan(1500)
 })
 
 test("the penguin and the year-2000 trigger share a corner", async ({ page }) => {
@@ -116,14 +152,19 @@ test("reduced motion fades between the quiet page and the year 2000 page", async
 
 test("warps through an iris when motion is allowed", async ({ page }) => {
   await page.goto("/")
+  await page.locator(".snowball-layer[data-ready]").waitFor()
   const world = page.locator(".world")
 
   await page.getByRole("link", { name: "Open the year 2000 version of this page" }).click({ noWaitAfter: true })
-  await expect(world).toHaveAttribute("data-warping", "out")
+  await expect(page.locator(".snowball, .snow-splat")).toHaveCount(1)
+  await page.waitForTimeout(400)
+  await expect(page).toHaveURL("/")
+  await expect(world).toHaveAttribute("data-warping", "out", { timeout: 3000 })
   await expect(page).toHaveURL("/y2k")
   await expect(world).toHaveAttribute("data-warping", "in")
   await expect(world).not.toHaveAttribute("data-warping", { timeout: 4000 })
 
+  await page.locator(".snowball-layer[data-ready]").waitFor()
   await page.getByRole("link", { name: "Return to the quiet page" }).click({ noWaitAfter: true })
   await expect(world).toHaveAttribute("data-warping", "out")
   await expect(page).toHaveURL("/")

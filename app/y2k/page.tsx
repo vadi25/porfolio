@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 
 import { Identity } from "@/components/ice/identity"
 import { Penguin } from "@/components/ice/penguin"
+import { Snowballs } from "@/components/ice/snowballs"
 import { VisitCounter } from "@/components/ice/visit-counter"
 import { person } from "@/lib/site"
 
@@ -56,6 +57,7 @@ export default function Y2KPage() {
         </article>
       </main>
       <Penguin href="/" label="Return to the quiet page" variant="y2k" />
+      <Snowballs />
     </div>
   )
 }

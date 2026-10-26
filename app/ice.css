@@ -1,32 +1,115 @@
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --snow: #f4f8fb;
+  --dusk: #16344e;
+}
+
 .world {
   min-height: 100%;
 }
 
 .ice-page {
   min-height: 100dvh;
-  background:
-    radial-gradient(ellipse at 8% -12%, rgb(255 255 255 / 0.96), transparent 46%),
-    radial-gradient(ellipse at 110% 110%, rgb(205 226 236 / 0.55), transparent 40%),
-    linear-gradient(180deg, #f8fbfc 0%, #e7f3f8 58%, #f5fafc 100%);
-  color: #17303a;
+  background: var(--dusk);
+  color: var(--snow);
+  color-scheme: dark;
   touch-action: manipulation;
 }
 
 body:has(.ice-page) {
-  background: #e7f3f8;
+  background: #10283e;
   background-image: none;
+}
+
+.polar {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+}
+
+.polar-sky,
+.polar-aurora {
+  position: absolute;
+  inset: 0;
+}
+
+.polar-sky {
+  background: linear-gradient(180deg, #10283e 0%, #14324c 30%, #18425e 54%, #1c4c68 72%, #245672 86%, #d5e4ec 100%);
+}
+
+.polar-aurora {
+  inset: 6% -8% auto;
+  height: 42%;
+  background:
+    radial-gradient(ellipse at 28% 70%, rgb(125 222 196 / 0.22), transparent 58%),
+    radial-gradient(ellipse at 72% 42%, rgb(186 230 214 / 0.14), transparent 52%);
+  animation: aurora-drift 48s linear infinite alternate;
+}
+
+.ridge {
+  position: absolute;
+  left: -4%;
+  bottom: 0;
+  display: block;
+  width: 108%;
+}
+
+.ridge-far {
+  z-index: 1;
+  height: 36vh;
+  min-height: 10rem;
+  animation: ridge-drift 92s linear infinite alternate;
+}
+
+.ridge-mid {
+  z-index: 2;
+  height: 28vh;
+  min-height: 8.5rem;
+  animation: ridge-drift 68s linear infinite alternate-reverse;
+}
+
+.ridge-near {
+  z-index: 5;
+  height: 20vh;
+  max-height: 12rem;
+  min-height: 7rem;
+  animation: ridge-drift 46s linear infinite alternate;
+}
+
+@keyframes ridge-drift {
+  from {
+    transform: translate3d(-1.6%, 0, 0);
+  }
+
+  to {
+    transform: translate3d(1.6%, 0, 0);
+  }
+}
+
+@keyframes aurora-drift {
+  from {
+    transform: translate3d(-2.5%, 0, 0);
+  }
+
+  to {
+    transform: translate3d(3%, 1.2%, 0);
+  }
 }
 
 .identity {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   box-sizing: border-box;
   width: min(100%, 42rem);
   margin-inline: auto;
   padding:
-    max(4.75rem, 15vh)
+    max(4.75rem, 14vh)
     max(1.35rem, env(safe-area-inset-right))
-    7rem
+    8.5rem
     max(1.35rem, env(safe-area-inset-left));
 }
 
@@ -34,7 +117,7 @@ body:has(.ice-page) {
   margin: 0 0 clamp(3.2rem, 8vh, 5.4rem);
   padding: 0;
   border: 0;
-  color: #3c5e6c;
+  color: var(--snow);
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(1.15rem, 2vw, 1.35rem);
   font-style: italic;
@@ -49,7 +132,7 @@ body:has(.ice-page) {
 .ice-page .greeting {
   max-width: 11em;
   margin: 0;
-  color: #16303a;
+  color: var(--snow);
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(3.05rem, 6.6vw, 5.15rem);
   font-weight: 500;
@@ -60,7 +143,7 @@ body:has(.ice-page) {
 .ice-page .bio {
   max-width: 36rem;
   margin: 1.15rem 0 0;
-  color: #2a4552;
+  color: var(--snow);
   font-size: 1.05rem;
   line-height: 1.6;
 }
@@ -81,37 +164,55 @@ body:has(.ice-page) {
 
 .ice-page .links li:not(:last-child)::after {
   content: " / ";
-  color: #8aa3ae;
+  color: rgb(244 248 251 / 0.55);
   white-space: pre;
 }
 
-.ice-page .links a {
-  color: #17303a;
-  text-decoration-color: rgb(23 48 58 / 0.38);
+.ice-page .links a,
+.ice-page .back-link a,
+.ice-page .rss-link a,
+.ice-page .prose a {
+  display: inline-block;
+  color: var(--snow);
+  text-decoration-color: rgb(244 248 251 / 0.45);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.22em;
+  transition: transform 160ms var(--ease-out);
 }
 
-.ice-page .links a:hover {
-  text-decoration-color: currentColor;
+.ice-page .links a:active,
+.ice-page .back-link a:active,
+.ice-page .rss-link a:active,
+.ice-page .prose a:active,
+.ice-page .post-list a:active {
+  transform: scale(0.97);
 }
 
 .ice-page ::selection,
 .reading ::selection {
-  background: #c5deea;
-  color: #17303a;
+  background: #d5e4ec;
+  color: #10283e;
 }
 
 .snow,
 .snowball-layer {
-  position: fixed;
+  position: absolute;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
 }
 
+.snowball-layer {
+  position: fixed;
+}
+
 .snow {
-  z-index: 1;
+  z-index: 4;
+  transition: opacity 200ms var(--ease-out);
+}
+
+.ice-page.is-throwing .snow {
+  opacity: 0.22;
 }
 
 .snow span {
@@ -140,8 +241,15 @@ body:has(.ice-page) {
   z-index: 35;
 }
 
+.throw {
+  position: absolute;
+  inset: 0;
+}
+
 .snowball,
-.snow-splat {
+.snow-splat,
+.snow-spark,
+.snow-shadow {
   position: absolute;
   top: 0;
   left: 0;
@@ -149,22 +257,43 @@ body:has(.ice-page) {
 }
 
 .snowball {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff, #e5f3f8 72%);
-  box-shadow: 0 1px 2px rgb(70 110 130 / 0.2);
+  background: radial-gradient(circle at 34% 30%, #fff 0 46%, #f4f8fb 68%, rgb(255 255 255 / 0) 70%);
+  box-shadow:
+    0 0 10px 3px rgb(255 255 255 / 0.95),
+    0 0 26px 8px rgb(214 238 255 / 0.72);
+  will-change: transform;
+}
+
+.snow-spark {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px 2px rgb(255 255 255 / 0.9);
+  will-change: transform, opacity;
+}
+
+.snow-shadow {
+  width: 28px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgb(6 14 24 / 0.78), transparent 68%);
+  will-change: transform, opacity;
 }
 
 .snow-splat {
-  width: 26px;
-  height: 14px;
+  width: 34px;
+  height: 16px;
   border-radius: 50%;
-  background: rgb(255 255 255 / 0.94);
+  background: rgb(255 255 255 / 0.96);
   box-shadow:
-    11px 3px 0 1px rgb(255 255 255 / 0.78),
-    -12px 2px 0 0 rgb(232 244 248 / 0.88),
-    1px -7px 0 -1px rgb(255 255 255 / 0.7);
+    0 0 14px 4px rgb(255 255 255 / 0.78),
+    15px 4px 0 1px rgb(255 255 255 / 0.88),
+    -16px 3px 0 0 rgb(244 248 251 / 0.82),
+    2px -10px 0 -1px rgb(255 255 255 / 0.74);
 }
 
 .corner-trigger {
@@ -183,11 +312,23 @@ body:has(.ice-page) {
   text-decoration: none;
 }
 
+.penguin:not(.y2k-trigger) {
+  transition: transform 160ms var(--ease-out);
+}
+
+.penguin:not(.y2k-trigger):active {
+  transform: scale(0.97);
+}
+
+.penguin.is-winding:not(.y2k-trigger) {
+  transform: translate3d(-8px, 3px, 0) scale(0.98);
+}
+
 .penguin-art {
   width: 4rem;
   height: auto;
   overflow: visible;
-  filter: drop-shadow(0 2px 0 rgb(125 156 170 / 0.28));
+  filter: drop-shadow(0 3px 0 rgb(8 18 32 / 0.38));
 }
 
 .portal-cover {
@@ -207,7 +348,7 @@ body:has(.ice-page) {
 
 .reading {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   box-sizing: border-box;
   width: min(100%, 40rem);
   margin-inline: auto;
@@ -220,7 +361,7 @@ body:has(.ice-page) {
 
 .reading h1,
 .post-title {
-  color: #16303a;
+  color: var(--snow);
   font-family: var(--font-display), Georgia, serif;
   font-weight: 500;
   letter-spacing: -0.035em;
@@ -245,8 +386,13 @@ body:has(.ice-page) {
 .back-link a,
 .rss-link a,
 .post-list a {
-  text-decoration-color: rgb(23 48 58 / 0.35);
+  color: var(--snow);
+  text-decoration-color: rgb(244 248 251 / 0.45);
   text-underline-offset: 0.2em;
+}
+
+.ice-page .post-list a {
+  transition: transform 160ms var(--ease-out);
 }
 
 .post-list {
@@ -258,20 +404,9 @@ body:has(.ice-page) {
 .post-list a {
   display: grid;
   gap: 0.25rem;
-  padding: 1rem 0;
-  border-top: 1px solid rgb(23 48 58 / 0.12);
+  padding: 1.15rem 0 0;
   color: inherit;
   text-decoration: none;
-}
-
-.post-list li:last-child a {
-  border-bottom: 1px solid rgb(23 48 58 / 0.12);
-}
-
-.post-list a:hover .post-title {
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.16em;
 }
 
 .post-title {
@@ -280,19 +415,19 @@ body:has(.ice-page) {
 
 .post-meta,
 .post-description {
-  color: #3c5e6c;
+  color: var(--snow);
   font-size: 0.95rem;
 }
 
 .draft-flag {
-  margin: 0 0 0.55rem;
-  color: #3d6d84;
+  margin: 0 0 0.35rem;
+  color: var(--snow);
   font-family: var(--font-body), sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  line-height: 1;
-  text-transform: uppercase;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.4;
+  text-transform: none;
 }
 
 .post-list .draft-flag {
@@ -305,7 +440,7 @@ body:has(.ice-page) {
 
 .prose {
   margin-top: 1.6rem;
-  color: #243e4a;
+  color: var(--snow);
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.28rem;
   line-height: 1.55;
@@ -580,9 +715,74 @@ body:has(.y2k-page) {
   transform: translate(1px, 1px);
 }
 
+.ice-page .identity > *,
+.ice-page .reading > * {
+  animation: ice-rise 360ms var(--ease-out) both;
+}
+
+.ice-page .identity > *:nth-child(2),
+.ice-page .reading > *:nth-child(2) {
+  animation-delay: 40ms;
+}
+
+.ice-page .identity > *:nth-child(3),
+.ice-page .reading > *:nth-child(3) {
+  animation-delay: 80ms;
+}
+
+.ice-page .identity > *:nth-child(4),
+.ice-page .reading > *:nth-child(4) {
+  animation-delay: 120ms;
+}
+
+.ice-page .identity > *:nth-child(5),
+.ice-page .reading > *:nth-child(5) {
+  animation-delay: 160ms;
+}
+
+@keyframes ice-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ice-page .links a:hover,
+  .ice-page .back-link a:hover,
+  .ice-page .rss-link a:hover,
+  .ice-page .prose a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .post-list a:hover .post-title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.16em;
+  }
+}
+
 @media (max-width: 40rem) {
   .ice-page .greeting {
     font-size: clamp(2.55rem, 12vw, 3.6rem);
+  }
+
+  .ridge-far {
+    height: 28vh;
+  }
+
+  .ridge-mid {
+    height: 22vh;
+  }
+
+  .ridge-near {
+    height: 15vh;
+    max-height: 8rem;
   }
 
   .y2k-status span:last-child {
@@ -595,9 +795,13 @@ body:has(.y2k-page) {
     display: none !important;
   }
 
+  .polar-aurora,
+  .ridge,
   .y2k-page .marquee span,
   .construction-bar,
-  .blink {
+  .blink,
+  .ice-page .identity > *,
+  .ice-page .reading > * {
     animation: none !important;
   }
 }

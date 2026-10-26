@@ -64,25 +64,49 @@ export function Penguin({ href, label, variant = "ice" }: PenguinProps) {
     if (!root) return
     const media = window.matchMedia("(prefers-reduced-motion: reduce)")
     const pupils = [...root.querySelectorAll<SVGElement>("[data-pupil]")]
+    const eyes = pupils.map(() => ({ x: 0, y: 0, vx: 0, vy: 0, tx: 0, ty: 0 }))
+    let frame = 0
+    let running = false
+
+    function tick() {
+      let moving = false
+      pupils.forEach((pupil, index) => {
+        const eye = eyes[index]
+        if (!eye) return
+        eye.vx = eye.vx * 0.55 + (eye.tx - eye.x) * 0.22
+        eye.vy = eye.vy * 0.55 + (eye.ty - eye.y) * 0.22
+        eye.x += eye.vx
+        eye.y += eye.vy
+        if (Math.hypot(eye.tx - eye.x, eye.ty - eye.y) > 0.04 || Math.hypot(eye.vx, eye.vy) > 0.04) moving = true
+        pupil.style.transform = `translate(${eye.x.toFixed(2)}px, ${eye.y.toFixed(2)}px)`
+      })
+      if (moving) frame = window.requestAnimationFrame(tick)
+      else running = false
+    }
 
     function onPoint(event: PointerEvent) {
-      for (const pupil of pupils) {
-        const eye = pupil.parentElement?.querySelector("[data-eye-box]")
-        if (!(eye instanceof Element)) continue
-        const box = eye.getBoundingClientRect()
-        const dx = event.clientX - (box.left + box.width / 2)
-        const dy = event.clientY - (box.top + box.height / 2)
+      pupils.forEach((pupil, index) => {
+        const box = pupil.parentElement?.querySelector("[data-eye-box]")
+        const eye = eyes[index]
+        if (!(box instanceof Element) || !eye) return
+        const rect = box.getBoundingClientRect()
+        const dx = event.clientX - (rect.left + rect.width / 2)
+        const dy = event.clientY - (rect.top + rect.height / 2)
         const len = Math.hypot(dx, dy)
         const dist = len === 0 ? 0 : Math.min(2.4, len / 26)
-        const ux = len === 0 ? 0 : (dx / len) * dist
-        const uy = len === 0 ? 0 : (dy / len) * dist
-        pupil.style.transform = `translate(${ux}px, ${uy}px)`
-      }
+        eye.tx = len === 0 ? 0 : (dx / len) * dist
+        eye.ty = len === 0 ? 0 : (dy / len) * dist
+      })
+      if (running) return
+      running = true
+      frame = window.requestAnimationFrame(tick)
     }
 
     function stop() {
       window.removeEventListener("pointermove", onPoint)
       window.removeEventListener("pointerdown", onPoint)
+      window.cancelAnimationFrame(frame)
+      running = false
       for (const pupil of pupils) pupil.style.transform = ""
     }
 
