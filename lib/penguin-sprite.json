@@ -1,0 +1,28 @@
+{
+  "palette": {
+    "b": "#1b2830",
+    "w": "#f4f8fb",
+    "e": "#ffffff",
+    "p": "#1b2830",
+    "k": "#f0a35e",
+    "f": "#e08a3c"
+  },
+  "rows": [
+    "................",
+    "......bbbb......",
+    "....bbbbbbbb....",
+    "...bbwwwwwwbb...",
+    "...bweewwweeb...",
+    "...bwpewwwpeb...",
+    "...bwwwkkwwwb...",
+    "....bbbbbbbb....",
+    "...bbbbbbbbbb...",
+    "..bbwwwwwwwwbb..",
+    "..bbwwwwwwwwbb..",
+    "..bbwwwwwwwwbb..",
+    "...bbwwwwwwbb...",
+    "....bbbbbbbb....",
+    "....ff....ff....",
+    "...fff....fff..."
+  ]
+}

@@ -1,7 +1,11 @@
 import type { Metadata, Viewport } from "next"
 import { Cormorant_Garamond, Manrope } from "next/font/google"
 
+import { WorldShell } from "@/components/ice/world-shell"
+import { person, siteUrl } from "@/lib/site"
+
 import "./globals.css"
+import "./ice.css"
 
 const display = Cormorant_Garamond({
   subsets: ["latin"],
@@ -18,17 +22,24 @@ const body = Manrope({
 })
 
 export const metadata: Metadata = {
-  title: "Javier Sánchez Vadillo — Founder & Product Engineer",
-  description:
-    "Selected ventures, product systems, and engineering work by founder-builder Javier Sánchez Vadillo.",
+  metadataBase: new URL(siteUrl()),
+  title: `${person.name} — ${person.role}`,
+  description: person.bio[0],
+  alternates: {
+    types: {
+      "application/rss+xml": "/rss.xml",
+    },
+  },
 }
 
-export const viewport: Viewport = { themeColor: "#f2ecdf" }
+export const viewport: Viewport = { themeColor: "#e7f3f8" }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className={`${display.variable} ${body.variable}`}>{children}</body>
+    <html lang="en" data-scroll-behavior="smooth">
+      <body className={`${display.variable} ${body.variable}`}>
+        <WorldShell>{children}</WorldShell>
+      </body>
     </html>
   )
 }

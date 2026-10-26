@@ -1,28 +1,20 @@
-import { ContactEndplate } from "@/components/portfolio/contact-endplate"
-import { Masthead } from "@/components/portfolio/masthead"
-import { PracticeMatrix } from "@/components/portfolio/practice-matrix"
-import { ProjectLedger } from "@/components/portfolio/project-ledger"
-import { SiteFooter } from "@/components/portfolio/site-footer"
-import { ToolStrip } from "@/components/portfolio/tool-strip"
-import { TopRail } from "@/components/portfolio/top-rail"
-import { RevealObserver } from "@/components/reveal-observer"
+import { Identity } from "@/components/ice/identity"
+import { Penguin } from "@/components/ice/penguin"
+import { Snow } from "@/components/ice/snow"
+import { Snowballs } from "@/components/ice/snowballs"
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <>
+    <div className="ice-page">
       <a className="skip-link" href="#main-content">
         Skip to Main Content
       </a>
-      <TopRail />
+      <Snow />
       <main id="main-content">
-        <Masthead />
-        <ProjectLedger />
-        <PracticeMatrix />
-        <ToolStrip />
-        <ContactEndplate />
+        <Identity />
       </main>
-      <SiteFooter />
-      <RevealObserver />
-    </>
+      <Penguin href="/y2k" label="Open the year 2000 version of this page" />
+      <Snowballs />
+    </div>
   )
 }
