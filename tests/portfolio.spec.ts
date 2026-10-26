@@ -140,7 +140,7 @@ test("reduced motion fades between the quiet page and the year 2000 page", async
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Hi, I'm Javier Sánchez Vadillo.")
   await expect(page.locator(".y2k-note")).toContainText("under construction")
   await expect(page.getByText("Visits from this browser")).toBeVisible()
-  await expect(page.locator('a[href="mailto:javiersvadillo@gmail.com"]')).toBeVisible()
+  await expect(page.locator('a[href="mailto:javiersvadillo@gmail.com"]')).toHaveCount(2)
   await expect
     .poll(() => world.evaluate((element) => getComputedStyle(element).transform))
     .toBe("none")

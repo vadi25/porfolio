@@ -214,7 +214,7 @@ export function Snowballs() {
 
       const anchor = target.closest("a")
       if (!(anchor instanceof HTMLAnchorElement) || !anchor.href || anchor.hasAttribute("download")) {
-        if (busy) return
+        if (busy || target.closest("[data-quiet-click]")) return
         void throwSnowball(field, event.clientX, event.clientY, prefersReducedMotion())
         return
       }

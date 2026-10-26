@@ -4,6 +4,8 @@ import { Identity } from "@/components/ice/identity"
 import { Penguin } from "@/components/ice/penguin"
 import { Snowballs } from "@/components/ice/snowballs"
 import { VisitCounter } from "@/components/ice/visit-counter"
+import { Y2kIntro, Y2kProps } from "@/components/ice/y2k-parody"
+import { Y2kTrail } from "@/components/ice/y2k-trail"
 import { person } from "@/lib/site"
 
 export const metadata: Metadata = {
@@ -38,6 +40,7 @@ export default function Y2KPage() {
             </span>
           </p>
           <div className="y2k-body">
+            <Y2kIntro />
             <Identity />
             <p className="visitor">
               Visits from this browser <VisitCounter />
@@ -49,6 +52,7 @@ export default function Y2KPage() {
               under construction
             </p>
             <div className="construction-bar" role="presentation" />
+            <Y2kProps />
           </div>
           <div className="y2k-status">
             <span>{person.role}</span>
@@ -57,6 +61,7 @@ export default function Y2KPage() {
         </article>
       </main>
       <Penguin href="/" label="Return to the quiet page" variant="y2k" />
+      <Y2kTrail />
       <Snowballs />
     </div>
   )

@@ -715,6 +715,396 @@ body:has(.y2k-page) {
   transform: translate(1px, 1px);
 }
 
+.y2k-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.y2k-stickers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.85rem 1.1rem;
+  margin: 0.2rem 0 0.85rem;
+  padding: 0.85rem 0.6rem 0.35rem;
+  overflow: hidden;
+}
+
+.y2k-sticker {
+  display: inline-block;
+  padding: 0.28rem 0.45rem;
+  border: 2px solid #111;
+  font-family: var(--font-comic), "Comic Sans MS", "Comic Sans", cursive;
+  font-size: clamp(0.72rem, 2vw, 0.95rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 3px 3px 0 #111;
+}
+
+.y2k-sticker-scam {
+  transform: rotate(-8deg);
+  background: #9f1239;
+  color: #fff;
+}
+
+.y2k-sticker-hot {
+  transform: rotate(6deg);
+  background: #ffe14a;
+  color: #171814;
+}
+
+.y2k-sticker-ie {
+  transform: rotate(-3deg);
+  background: #dbeafe;
+  color: #172554;
+}
+
+.y2k-wordmark {
+  margin: 0.35rem 0 0;
+  color: #5a0078;
+  font-family: var(--font-comic), "Comic Sans MS", "Comic Sans", cursive;
+  font-size: clamp(1.85rem, 6vw, 3.1rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  .y2k-wordmark {
+    background-image: linear-gradient(
+      90deg,
+      #e1064a 0%,
+      #ef7b00 18%,
+      #c9a000 34%,
+      #0f8a45 50%,
+      #1d4ed8 66%,
+      #7c3aed 82%,
+      #c4146a 100%
+    );
+    background-size: 220% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: y2k-wordmark 12s linear infinite;
+  }
+}
+
+@keyframes y2k-wordmark {
+  to {
+    background-position: 220% 0;
+  }
+}
+
+.y2k-hero-note,
+.y2k-menu-note,
+.y2k-aside,
+.y2k-straight {
+  color: #333;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.y2k-hero-note,
+.y2k-menu-note {
+  margin: 0.45rem 0 0;
+  text-align: center;
+}
+
+.y2k-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.85rem;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding: 0.15rem 0.45rem;
+  border-top: 2px solid #fff;
+  border-bottom: 2px solid #808080;
+  background: #d4d0c8;
+  color: #5e5a54;
+  font-family: Tahoma, Verdana, sans-serif;
+  font-size: 0.82rem;
+}
+
+.y2k-menu a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #0000c8;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.y2k-fake-counter,
+.y2k-trusted,
+.y2k-rate,
+.y2k-exhibits article,
+.y2k-book {
+  margin-top: 0.75rem;
+  padding: 0.7rem;
+  border: 2px solid #171814;
+  background: #fff;
+}
+
+.y2k-rate {
+  border-style: dashed;
+  border-color: #9f1239;
+  background: #fff4b8;
+}
+
+.y2k-fake-counter > p:first-child,
+.y2k-trusted > p:first-child,
+.y2k-rate > p:first-child {
+  margin: 0;
+  font-family: var(--font-comic), "Comic Sans MS", "Comic Sans", cursive;
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.y2k-digits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  margin: 0.45rem 0 0;
+}
+
+.y2k-digits span {
+  display: grid;
+  width: 1.35rem;
+  height: 1.7rem;
+  place-items: center;
+  background: #111;
+  color: #c6ff5c;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.y2k-trusted ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0.55rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.y2k-trusted li {
+  padding: 0.35rem 0.45rem;
+  border: 2px solid #171814;
+  background: #fff;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.y2k-trusted li:nth-child(1) {
+  color: #9f1239;
+}
+
+.y2k-trusted li:nth-child(3) {
+  font-style: italic;
+}
+
+.y2k-price {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.7rem;
+  align-items: baseline;
+  margin: 0.35rem 0 0;
+}
+
+.y2k-price s {
+  color: #5c584f;
+}
+
+.y2k-price strong {
+  color: #9f1239;
+  font-size: 1.35rem;
+}
+
+.y2k-exhibits,
+.y2k-reviews {
+  margin-top: 0.9rem;
+}
+
+.y2k-exhibits h2,
+.y2k-reviews h2,
+.y2k-exhibits h3 {
+  margin: 0;
+  font-family: var(--font-comic), "Comic Sans MS", "Comic Sans", cursive;
+  line-height: 1;
+}
+
+.y2k-exhibits h2,
+.y2k-reviews h2 {
+  font-size: 1.45rem;
+}
+
+.y2k-exhibits ol,
+.y2k-book ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.y2k-exhibits h3 {
+  font-size: 1.35rem;
+}
+
+.y2k-yell {
+  margin: 0.45rem 0 0;
+  color: #9f1239;
+  font-family: var(--font-comic), "Comic Sans MS", "Comic Sans", cursive;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.y2k-joke {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-comic), "Comic Sans MS", "Comic Sans", cursive;
+  line-height: 1.35;
+}
+
+.y2k-straight {
+  margin: 0.45rem 0 0;
+}
+
+.y2k-ugly {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: 0.65rem;
+  padding: 0.35rem 0.7rem;
+  border: 3px solid #fff;
+  border-right-color: #404040;
+  border-bottom-color: #404040;
+  background: #d4d0c8;
+  color: #171814;
+  font-family: var(--font-comic), "Comic Sans MS", "Comic Sans", cursive;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.y2k-ugly:active {
+  border-color: #404040 #fff #fff #404040;
+}
+
+.y2k-book {
+  background: #fff7d6;
+}
+
+.y2k-disclaimer {
+  margin: 0;
+  padding: 0.5rem 0.6rem;
+  background: #171814;
+  color: #ffe14a;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.y2k-book figure {
+  margin: 0.65rem 0 0;
+  padding: 0.65rem;
+  border: 2px dashed #1749a3;
+  background: #fff;
+}
+
+.y2k-book blockquote {
+  margin: 0;
+}
+
+.y2k-book blockquote p {
+  margin: 0;
+  font-family: var(--font-comic), "Comic Sans MS", "Comic Sans", cursive;
+  line-height: 1.35;
+}
+
+.y2k-book figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.55rem;
+  margin-top: 0.45rem;
+  color: #333;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 0.75rem;
+}
+
+.y2k-book figcaption span:first-child {
+  color: #9f1239;
+  letter-spacing: 0.08em;
+}
+
+.y2k-sign {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.8rem;
+}
+
+.y2k-sign label {
+  font-family: var(--font-comic), "Comic Sans MS", "Comic Sans", cursive;
+  font-weight: 700;
+}
+
+.y2k-sign input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.4rem 0.55rem;
+  border: 2px solid #171814;
+  background: #fff;
+  color: #171814;
+  font: 400 1rem/1.3 var(--font-comic), "Comic Sans MS", "Comic Sans", cursive;
+}
+
+.y2k-stamp {
+  margin: 0;
+  padding: 0.5rem 0.6rem;
+  background: #171814;
+  color: #ffe14a;
+  font-family: var(--font-comic), "Comic Sans MS", "Comic Sans", cursive;
+  font-weight: 700;
+}
+
+.y2k-trail {
+  position: fixed;
+  z-index: 25;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.y2k-trail span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: -0.55rem 0 0 -0.45rem;
+  color: #ffe14a;
+  font-size: 0.95rem;
+  line-height: 1;
+  text-shadow: 1px 1px 0 #9f1239;
+}
+
 .ice-page .identity > *,
 .ice-page .reading > * {
   animation: ice-rise 360ms var(--ease-out) both;
@@ -798,6 +1188,7 @@ body:has(.y2k-page) {
   .polar-aurora,
   .ridge,
   .y2k-page .marquee span,
+  .y2k-wordmark,
   .construction-bar,
   .blink,
   .ice-page .identity > *,
